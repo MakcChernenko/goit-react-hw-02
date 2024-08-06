@@ -1,9 +1,9 @@
 import css from "./Options.module.css";
 import clsx from "clsx";
 
-const Options = ({ updateFeedback }) => {
+const Options = ({ updateFeedback, totalFeedback, resetFeedback }) => {
   return (
-    <ul className={clsx(css, css.buttonList)}>
+    <ul className={clsx(css.buttonList)}>
       <li>
         <button type="button" onClick={() => updateFeedback("good")}>
           good
@@ -18,6 +18,13 @@ const Options = ({ updateFeedback }) => {
         <button type="button" onClick={() => updateFeedback("bad")}>
           bad
         </button>
+      </li>
+      <li>
+        {totalFeedback !== 0 && (
+          <button type="button" onClick={resetFeedback}>
+            reset
+          </button>
+        )}
       </li>
     </ul>
   );
