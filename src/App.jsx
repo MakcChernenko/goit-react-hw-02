@@ -19,7 +19,12 @@ function App() {
       };
     }
   });
-
+  const [statistick, setStatistick] = useState(0);
+  useEffect(() => {
+    setStatistick(
+      Math.round((feedback.good / (feedback.good + feedback.bad)) * 100)
+    );
+  }, [statistick, feedback]);
   const resetFeedback = () => {
     setFeedback({
       good: 0,
@@ -56,6 +61,7 @@ function App() {
           bad={feedback.bad}
           resetFeedback={resetFeedback}
           total={totalFeedback}
+          statistick={statistick}
         />
       )}
       {totalFeedback === 0 && <Notification />}
