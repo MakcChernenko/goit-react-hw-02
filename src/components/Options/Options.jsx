@@ -20,7 +20,7 @@ const Options = ({ updateFeedback, totalFeedback, resetFeedback }) => {
         </button>
       </li>
       <li>
-        {totalFeedback !== 0 && (
+        {totalFeedback > 0 && (
           <button type="button" onClick={resetFeedback}>
             reset
           </button>

@@ -7,7 +7,6 @@ import Description from "./components/Description/Description";
 import Notification from "./components/Notification/Notification";
 
 function App() {
-  // тут логіка зміни і збереження у локальному хранилищі feedback-ка
   const [feedback, setFeedback] = useState(() => {
     const savedFeedback = window.localStorage.getItem("feedback");
     if (savedFeedback !== null) {
@@ -20,36 +19,26 @@ function App() {
       };
     }
   });
+  useEffect(() => {
+    window.localStorage.setItem("feedback", JSON.stringify(feedback));
+  }, [feedback]);
+
   const updateFeedback = (feedbackType) => {
     setFeedback((prevFeedback) => ({
       ...prevFeedback,
       [feedbackType]: prevFeedback[feedbackType] + 1,
     }));
   };
-  useEffect(() => {
-    window.localStorage.setItem("feedback", JSON.stringify(feedback));
-  }, [feedback]);
-  // тут просто збираю загальну кількість кліків і через useEffect змушую елементи
-  // залежні від totalFeedback змінюватися
-  const [totalFeedback, setTotalFeedback] = useState(0);
-  useEffect(() => {
-    setTotalFeedback(feedback.good + feedback.neutral + feedback.bad);
-  }, [feedback]);
-  // тут вираховую відсоток позитивних відгуків і компонент із prop-ом statistick змінюється
-  const [statistick, setStatistick] = useState(0);
-  useEffect(() => {
-    setStatistick(
-      Math.round((feedback.good / (totalFeedback - feedback.neutral)) * 100)
-    );
-  }, [feedback, totalFeedback]);
-  // тут обнуляю feedback, хоча можливо це можна б було зробити через useEffect
+
+  const totalFeedback = feedback.good + feedback.neutral + feedback.bad;
+  const positiveFeedback = Math.round((feedback.good / totalFeedback) * 100);
+
   const resetFeedback = () => {
     setFeedback({
       good: 0,
       neutral: 0,
       bad: 0,
     });
-    window.localStorage.setItem("feedback", feedback);
   };
 
   return (
@@ -60,17 +49,18 @@ function App() {
         totalFeedback={totalFeedback}
         resetFeedback={resetFeedback}
       />
-      {totalFeedback !== 0 && (
+      {totalFeedback > 0 ? (
         <Feedback
           good={feedback.good}
           neutral={feedback.neutral}
           bad={feedback.bad}
           resetFeedback={resetFeedback}
           total={totalFeedback}
-          statistick={statistick}
+          statistick={positiveFeedback}
         />
+      ) : (
+        <Notification />
       )}
-      {!totalFeedback && <Notification />}
     </div>
   );
 }
