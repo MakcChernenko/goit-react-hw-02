@@ -6,7 +6,10 @@ import Options from "./components/Options/Options";
 import Description from "./components/Description/Description";
 import Notification from "./components/Notification/Notification";
 
+// ===============Велике дякую тому хто це перевіряв!====
+// ======================================================
 function App() {
+  // коректне повернення фідбека, всі залежні елементи будуть змінюватися відповідно.
   const [feedback, setFeedback] = useState(() => {
     const savedFeedback = window.localStorage.getItem("feedback");
     if (savedFeedback !== null) {
@@ -19,20 +22,21 @@ function App() {
       };
     }
   });
+  // логіка реакції на зміну фідбека, думаю в один useEffect можна більше одного ефекту прописати
   useEffect(() => {
     window.localStorage.setItem("feedback", JSON.stringify(feedback));
   }, [feedback]);
-
+  // функція зміни стану при кліці, або іншій події
   const updateFeedback = (feedbackType) => {
     setFeedback((prevFeedback) => ({
       ...prevFeedback,
       [feedbackType]: prevFeedback[feedbackType] + 1,
     }));
   };
-
+  // просто дані у змінних для використання у дочірніх компонентах
   const totalFeedback = feedback.good + feedback.neutral + feedback.bad;
   const positiveFeedback = Math.round((feedback.good / totalFeedback) * 100);
-
+  // просто обнуляю фідбек а верхній useEffect обновить локальний сховок.
   const resetFeedback = () => {
     setFeedback({
       good: 0,
